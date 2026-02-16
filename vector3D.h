@@ -10,6 +10,12 @@ struct vector3D {
     float z;
 };
 
+//Assignation of the parameters of the vector with given values
+//PRE  : three valid float values are given
+//POST : a vector with the three values is returned. The order of assignements is :
+//       arg1 = x / arg2 = y / arg3 = z
+struct vector3D vector3D_parameters_assignation(float a, float b, float c);
+
 //Addition of two 3D vectors
 //PRE  : two valid 3D vectors address are given
 //Post : the function returns the resulting 3D vector -> A + B = C
@@ -49,14 +55,33 @@ struct vector3D vector3D_normalize(struct vector3D *A);
 //Matrix 3x3
 //-------------------------------------------------------------------------------------------------------------------------//
 
+// A Union permits different ways to acces data in the matrix. First as a vector, second as a matrix
 struct matrix3x3{
-    float matrix[9];    
+    union {
+        float matrix[9];    
+        float mmatrix[3][3];
+    };
 };
 
 //Useful matrix3x3
-const struct matrix3x3 Identity = {{1.0f, 0.0f, 0.0f},
-                                   {0.0f, 1.0f, 0.0f},
-                                   {0.0f, 0.0f, 1.0f}};
+// If your struct is: struct matrix { float v[9]; };
+
+extern const struct matrix3x3 Identity;
+
+//PRE   : three valid vector3D address are given
+//POST  : a matrix3x3 is created, composed of the three vectors. So matrix = {A,B,C}
+struct matrix3x3 vector3D_to_matrix3x3(struct vector3D *A, struct vector3D *B, struct vector3D *C);
+
+//PRE   : nine valid float values are given
+//POST  : a matrix with the values as parameters is returned. The assignement order is :
+//        arg1 = e1 / arg2 = e2 / ... / arg9 = e9
+struct matrix3x3 float_to_matrix3x3(float a, float b, float c, float d, float e, float f, float g, float h, float i);
+
+//PRE   : a valid float vector address is given and two integer a and b, being a the left limit of the selected
+//        segment of the vector and b the right limit (a < b / a and b are indexs). The value of a and b are included.
+//POST  : a matrix with the values of the vector is returned using the elemts from a to b.
+//        in case that the elements between a and b is less than 9 the Identity matrix will be returned
+struct matrix3x3 vector_to_matrix3x3(float v[], int a , int b);
 
 //PRE   : two valid matrix3x3 address are given
 //POST  : the function returns the sum of the matrixs
@@ -82,7 +107,3 @@ struct matrix3x3 matrix3x3_escalar_mul(float s, struct matrix3x3 *A);
 //PRE   : two valid matrix3x3 address are given
 //POST  ; the function returns the resulting matrix of the matrix multiplication between A and B -> AxB
 struct matrix3x3 matrix3x3_matrix_mul(struct matrix3x3 *A, struct matrix3x3 *B);
-
-//PRE   : three valid vector3D address are given
-//POST  : a matrix3x3 is created, composed of the three vectors. So matrix = {A,B,C}
-struct matrix3x3 vector3D_to_matrix3x3(struct vector3D *A, struct vector3D *B, struct vector3D *C);

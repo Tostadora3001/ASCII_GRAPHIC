@@ -3,6 +3,24 @@
 
 //Vectors 3D
 //-------------------------------------------------------------------------------------------------------------------------//
+const struct matrix3x3 Identity = 
+{
+    {
+        { 1.0f, 0.0f, 0.0f, 
+        0.0f, 1.0f, 0.0f, 
+        0.0f, 0.0f, 1.0f 
+        }
+    }
+};
+
+struct vector3D vector3D_parameters_assignation(float a, float b, float c){
+    struct vector3D A;
+    A.x = a;
+    A.y = b;
+    A.z = c;
+    
+    return A;
+}
 
 struct vector3D vector3D_add(struct vector3D *A, struct vector3D *B){
     struct vector3D C;
@@ -69,6 +87,49 @@ struct vector3D vector3D_normalize(struct vector3D *A){
 //Matrix 3x3
 //-------------------------------------------------------------------------------------------------------------------------//
 
+struct matrix3x3 vector3D_to_matrix3x3(struct vector3D *A, struct vector3D *B, struct vector3D *C){
+    struct matrix3x3 D;
+    D.matrix[0] = A->x;
+    D.matrix[1] = A->y;
+    D.matrix[2] = A->z;
+
+    D.matrix[3] = B->x;
+    D.matrix[4] = B->y;
+    D.matrix[5] = B->z;
+
+    D.matrix[6] = C->x;
+    D.matrix[7] = C->y;
+    D.matrix[8] = C->z;
+
+    return D;
+}
+
+struct matrix3x3 float_to_matrix3x3(float a, float b, float c, float d, float e, float f, float g, float h, float i){
+    struct matrix3x3 A;
+    A.matrix[0] = a;
+    A.matrix[1] = b;
+    A.matrix[2] = c;
+    A.matrix[3] = d;
+    A.matrix[4] = e;
+    A.matrix[5] = f;
+    A.matrix[6] = g;
+    A.matrix[7] = h;
+    A.matrix[8] = i;
+
+    return A;
+}
+
+struct matrix3x3 vector_to_matrix3x3(float v[], int a , int b){
+    struct matrix3x3 A;
+    
+    if(a - b < 8) A = Identity;
+    else{
+        for(int i = a; i <= b; ++i) A.matrix[i-a] = v[i];
+    }
+
+    return A;
+}
+
 struct matrix3x3 matrix3x3_add(struct matrix3x3 *A, struct matrix3x3 *B){
     struct matrix3x3 C;
     for(int i = 0; i < 9; ++i){
@@ -127,21 +188,4 @@ struct matrix3x3 matrix3x3_matrix_mul(struct matrix3x3 *A, struct matrix3x3 *B){
     }
 
     return C;
-}
-
-struct matrix3x3 vector3D_to_matrix3x3(struct vector3D *A, struct vector3D *B, struct vector3D *C){
-    struct matrix3x3 D;
-    D.matrix[0] = A->x;
-    D.matrix[1] = A->y;
-    D.matrix[2] = A->z;
-
-    D.matrix[3] = B->x;
-    D.matrix[4] = B->y;
-    D.matrix[5] = B->z;
-
-    D.matrix[6] = C->x;
-    D.matrix[7] = C->y;
-    D.matrix[8] = C->z;
-
-    return D;
 }
