@@ -1,5 +1,125 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <signal.h>
+#include <stdlib.h>
+
 #include "Graphic.h"
 
+//Utility functions for Point and Object management
+//-------------------------------------------------------------------------------------------------------------------------//
+
+struct Point set_Point(struct vector3D *vec, char color){
+    struct Point P;
+    P.coord = vec;
+    P.color = color;
+
+    return P;
+}
+
+struct Point move_Point_with_vector3D(struct Point *P, struct vector3D *vec){
+    P->coord = vector3D_add(&P->coord, *vec);
+    return;
+}
+
+void change_color(struct Point *P, char color){
+    P->color = color;
+}
+
+struct vector3D vector3D_A_B(struct Point *A, struct Point *B){
+    struct vector3D diff;
+    diff = vector3D_sub(*A, *B);
+
+    return diff;
+}
+
+struct Object Initialice_Object(int max_size){
+    if(1 > max_size){
+        perror("Error: max_size <= 0\n");
+        exit(EXIT_FAILURE);
+    }
+
+    struct Object O;
+    O.vector = malloc(max_size);
+    if(O.vector == NULL){
+        perror("Error: Initialice_Object malloc\n");
+        exit(EXIT_FAILURE);
+    }
+
+    O.size = 0;
+    O.max_size = max_size;
+    return O;
+}
+
+void Object_max_size_modify(struct Object *O, int new_max_size){
+    if(1 > new_max_size){
+        perror("Error: max_size <= 0\n");
+        exit(EXIT_FAILURE);
+    }
+
+    O->vector = realloc(O->vector, new_max_size);
+    if(O->vector == NULL){
+        perror("Error: Initialice_Object malloc\n");
+        exit(EXIT_FAILURE);
+    }
+
+    O->max_size = new_max_size;
+    if(O->max_size < O->size) O->size = O->max_size;
+
+    return;
+}
+
+void add_Point_to_Object(struct Object *O, struct Point *P){
+    if(O->max_size == O->size){
+        perror("Error: the object is full\n");
+        exit(EXIT_FAILURE);
+    }
+    
+    O->vector[O->size - 1] = P;
+}
+
+void del_Point_of_Object(struct Object *O, int i){
+    if(i >= O->size || i < 0){
+        perror("Erro: invalid index\n");
+        exit(EXIT_FAILURE);
+    }
+
+    for(; i < size-1; ++i){
+        O->vector[i] = O->vector[i+1];
+    }
+
+    --size;
+}
+
+void del_segment_of_Object(struct Object *O, int i, int j){
+    if(i >= O->size || i < 0){
+        perror("Erro: invalid index i\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if(j >= O->size || j < 0){
+        perror("Erro: invalid index j\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if(i > j){
+        perror("Error: i must be smaller than j (i < j)\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if(j == O->size - 1) O->size = i + 1;
+    else{
+        for(x = i; (x + (i-j) + 1) < O->size; ++x){
+            O->vector[x] = O->vector[x + (i-j) + 1];
+        }
+
+        O->size = O->size - (i-j);
+    }
+}
+
+void del_Object(struct Object *O);
+
+
+//-------------------------------------------------------------------------------------------------------------------------//
 //Linux Interface Terminal
 //This section contains the needed code to draw the 3D simulation into the Linux terminal
 //-------------------------------------------------------------------------------------------------------------------------//

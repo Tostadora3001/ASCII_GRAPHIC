@@ -3,7 +3,8 @@
 
 #include "Graphic.h"
 
-struct vector3D aux, aux2;
+struct vector3D aux;
+struct vector3D aux2;
 
 void debuger(int i){
     printf("%f %f %f\n" , aux.x, aux.y, aux.z);
