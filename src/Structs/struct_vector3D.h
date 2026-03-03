@@ -1,6 +1,9 @@
 #ifndef STRUCT_VECTOR3D_H
 #define STRUCT_VECTOR3D_H
 
+#define VECTOR_STRUCT_SIZE (sizeof(struct vector3D))
+#define MATRIX3x3_STRUCT_SIZE (sizeof(struct matrix3x3))
+
 //vector3D
 //struct of the 3D vector
 

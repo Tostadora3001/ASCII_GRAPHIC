@@ -8,8 +8,6 @@
 //Vectors 3D
 //-------------------------------------------------------------------------------------------------------------------------//
 
-#define VECTOR_STRUCT_SIZE (sizeof(struct vector3D))
-
 //struct of the 3D vector
 struct vector3D;
 

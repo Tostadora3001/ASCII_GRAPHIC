@@ -14,8 +14,24 @@
 void check_arg_pointer(void *pointer);
 
 //vector3D validation functions
-void check_vector3D(struct vector3D);
+
+//validates that the values of the vector (x,y,z) are inside R (not indeterminated values as NaN)
+void check_vector3D(struct vector3D *v);
+
+//validates that the elements of the matrix (e0,...,e8) are inside R (not indeterminated values as NaN)
+void check_matrix3x3(struct matrix3x3 *M);
 
 //Object validation functions
+
+//validates that coord of the Point is coherent (check_vecot_3D)
+void check_point(struct Point *P);
+
+//validetes that the size and max_size are coherent and that vector != NULL. It does not
+//validate if the Points inside vector are coherent. Thus this is a quick validation.
+void quick_check_Object(struct Object *O);
+
+//execite quick_check_Object and also validates that the Points inside vector are coherent. Thus is extensive
+void extensive_check_Object(struct Object *O);
+
 
 #endif

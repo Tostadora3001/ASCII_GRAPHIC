@@ -3,20 +3,12 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <sys/ioctl.h>
+#include <math.h>
 
 
 #include "Graphic.h"
 
-//Utility functions for potencial errors management
-
-void check_arg_pointer(void *pointer){
-    if(pointer == NULL){
-        fprintf(stderr, "Fatal Error: Unexpected NULL pointer in argument.\n");
-        exit(EXIT_FAILURE);
-    }
-}
-
-//Utility functions for Point and Object management
+//Utility functions for Point management
 //-------------------------------------------------------------------------------------------------------------------------//
 
 struct Point set_Point(struct vector3D *vec, char color){
@@ -45,6 +37,26 @@ struct vector3D vector3D_A_B(struct Point *A, struct Point *B){
     return diff;
 }
 
+int equal_Point_exact(struct Point *A, struct Point *B){
+    if(A->coord.x != B->coord.x) return 0;
+    if(A->coord.y != B->coord.y) return 0;
+    if(A->coord.z != B->coord.z) return 0;
+    if(A->color != B->color) return 0;
+
+    return 1;
+}
+
+int equal_Point_coord(struct Point *A, struct Point *B){
+    if(A->coord.x != B->coord.x) return 0;
+    if(A->coord.y != B->coord.y) return 0;
+    if(A->coord.z != B->coord.z) return 0;
+
+    return 1;
+}
+
+//Utility functions for Object management
+//-------------------------------------------------------------------------------------------------------------------------//
+
 struct Object Initialice_Object(int max_size){
     if(1 > max_size){
         perror("Error: max_size <= 0\n");
@@ -52,7 +64,7 @@ struct Object Initialice_Object(int max_size){
     }
 
     struct Object O;
-    O.vector = malloc(max_size * POINT_STRUCT_SIZE);
+    O.vector = malloc((max_size + 1) * POINT_STRUCT_SIZE);
     if(O.vector == NULL){
         perror("Error: Initialice_Object malloc\n");
         exit(EXIT_FAILURE);
@@ -60,6 +72,8 @@ struct Object Initialice_Object(int max_size){
 
     O.size = 0;
     O.max_size = max_size;
+    O.vector[max_size] = SENTINEL_VALUE;
+
     return O;
 }
 
@@ -69,7 +83,7 @@ void Object_max_size_modify(struct Object *O, int new_max_size){
         exit(EXIT_FAILURE);
     }
 
-    O->vector = realloc(O->vector, new_max_size * POINT_STRUCT_SIZE);
+    O->vector = realloc(O->vector, (new_max_size + 1) * POINT_STRUCT_SIZE);
     if(O->vector == NULL){
         perror("Error: Initialice_Object malloc\n");
         exit(EXIT_FAILURE);
@@ -77,6 +91,7 @@ void Object_max_size_modify(struct Object *O, int new_max_size){
 
     O->max_size = new_max_size;
     if(O->max_size < O->size) O->size = O->max_size;
+    O->vector[new_max_size] = SENTINEL_VALUE;
 
     return;
 }
@@ -88,6 +103,8 @@ void add_Point_to_Object(struct Object *O, struct Point *P){
     }
     
     O->vector[O->size - 1] = *P;
+
+    return;
 }
 
 void del_Point_of_Object(struct Object *O, int i){
@@ -101,6 +118,8 @@ void del_Point_of_Object(struct Object *O, int i){
     }
 
     --O->size;
+
+    return;
 }
 
 void del_segment_of_Object(struct Object *O, int i, int j){
@@ -127,6 +146,8 @@ void del_segment_of_Object(struct Object *O, int i, int j){
 
         O->size = O->size - (i-j);
     }
+
+    return;
 }
 
 void del_Object(struct Object *O){
@@ -137,6 +158,8 @@ void del_Object(struct Object *O){
     O->size = 0;
     O->max_size = 0;
     O->vector = NULL;
+
+    return;
 }
 
 

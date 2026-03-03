@@ -3,10 +3,14 @@
 
 #include "struct_vector3D.h"
 
+#define POINT_STRUCT_SIZE (sizeof(struct Point))
+#define OBJECT_STRUCT_SIZE (sizeof(struct Object))
+#define CAMERA_STRUCT_SIZE (sizeof(struct Camera))
+
 //A struct of a point containing the coordinates and the character (color) that will be printed when the point is printed
 struct Point{
     struct vector3D coord;
-    char color;
+    char color;         //can not be \n
 };
 
 //A struct of an object. An object is composed of points and the total number (size) of points (max_size is used for memory management)
@@ -15,6 +19,9 @@ struct Object{
     int max_size;
     struct Point *vector;
 };
+
+//A sentinel value used to validate the integrity of the Object.vector
+const struct Point SENTINEL_VALUE = { {NAN, NAN, NAN}, '\0' };
 
 //A struct of a camera. A Camera is a special point, needed for the graphic calculation. It is composed of a point and a direction, both being a vector3D
 struct Camera{

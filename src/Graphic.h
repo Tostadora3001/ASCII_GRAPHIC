@@ -9,12 +9,10 @@
 
 #include "vector3D.h"
 #include "Structs/struct_graphic.h"
-
-#define POINT_STRUCT_SIZE (sizeof(struct Point))
-#define OBJECT_STRUCT_SIZE (sizeof(struct Object))
+#include "Integrity.h"
 
 //A struct of a point containing the coordinates and the character (color) that will be printed when the point is printed
-struct Point;
+struct Point;            //color can not be \n
 
 //A struct of an object. An object is composed of points and the total number (size) of points (max_size is used for memory management)
 struct Object;
@@ -26,7 +24,7 @@ struct Camera;
 
 void check_arg_pointer(void *pointer);
 
-//Utility functions for Point and Object management
+//Utility functions for Point management
 //-------------------------------------------------------------------------------------------------------------------------//
 
 //PRE  : a valid vector3D address and a char are given
@@ -44,6 +42,17 @@ void change_color(struct Point *P, char color);
 //PRE  : two valid Point addresses are given
 //POST : the vector3D AB is returned, being A the first point and B the second
 struct vector3D vector3D_A_B(struct Point *A, struct Point *B);
+
+//PRE  : two valid Point addresses are given
+//POST : if A is strictly equal to B (same coord and color) returns 1, else 0
+int equal_Point_exact(struct Point *A, struct Point *B);
+
+//PRE  : two valid Point addresses are given
+//POST : if the coord of A is equal to the coord of B returns 1, else returns 0
+int equal_Point_coord(struct Point *A, struct Point *B);
+
+//Utility functions for Object management
+//-------------------------------------------------------------------------------------------------------------------------//
 
 //PRE  : a max_size for the object is given (it can be changed later). max_size > 0
 //POST : the vector and values of Object are initialiced
