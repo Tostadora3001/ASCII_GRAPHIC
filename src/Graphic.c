@@ -7,21 +7,30 @@
 
 
 #include "Graphic.h"
+#include "Integrity.h"
 
 //Utility functions for Point management
 //-------------------------------------------------------------------------------------------------------------------------//
 
 struct Point set_Point(struct vector3D *vec, char color){
-    check_arg_pointer(vec);
+    check_vector3D(vec);
 
     struct Point P;
     P.coord = *vec;
+
+    if(color == '\n'){
+        fprintf(2, "Error: new_line is not a valid color character\n");
+        exit(EXIT_FAILURE);
+    }
     P.color = color;
 
     return P;
 }
 
 struct Point move_Point_with_vector3D(struct Point *P, struct vector3D *vec){
+    check_point(P);
+    check_vector3D(vec);
+
     P->coord = vector3D_add(&P->coord, vec);
     return;
 }
@@ -31,6 +40,9 @@ void change_color(struct Point *P, char color){
 }
 
 struct vector3D vector3D_A_B(struct Point *A, struct Point *B){
+    check_point(A);
+    check_point(B);
+    
     struct vector3D diff;
     diff = vector3D_sub(A, B);
 
@@ -38,6 +50,9 @@ struct vector3D vector3D_A_B(struct Point *A, struct Point *B){
 }
 
 int equal_Point_exact(struct Point *A, struct Point *B){
+    check_point(A);
+    check_point(B);
+
     if(A->coord.x != B->coord.x) return 0;
     if(A->coord.y != B->coord.y) return 0;
     if(A->coord.z != B->coord.z) return 0;
@@ -47,6 +62,9 @@ int equal_Point_exact(struct Point *A, struct Point *B){
 }
 
 int equal_Point_coord(struct Point *A, struct Point *B){
+    check_point(A);
+    check_point(B);
+    
     if(A->coord.x != B->coord.x) return 0;
     if(A->coord.y != B->coord.y) return 0;
     if(A->coord.z != B->coord.z) return 0;
@@ -57,7 +75,7 @@ int equal_Point_coord(struct Point *A, struct Point *B){
 //Utility functions for Object management
 //-------------------------------------------------------------------------------------------------------------------------//
 
-struct Object Initialice_Object(int max_size){
+struct Object Initialice_void_Object(int max_size){
     if(1 > max_size){
         perror("Error: max_size <= 0\n");
         exit(EXIT_FAILURE);
@@ -77,7 +95,23 @@ struct Object Initialice_Object(int max_size){
     return O;
 }
 
+struct Object Initialice_load_Object(int max_size, int size, struct Point *v){
+    check_arg_pointer(v);
+    
+    struct Object O;
+    O = Initialice_void_Object(max_size);
+
+    for(int i = 0; i < size; ++i){
+        O.vector[i] = v[i];
+    }
+
+    return O;
+}
+
+
 void Object_max_size_modify(struct Object *O, int new_max_size){
+    quick_check_Object(O);
+    
     if(1 > new_max_size){
         perror("Error: max_size <= 0\n");
         exit(EXIT_FAILURE);
@@ -97,6 +131,9 @@ void Object_max_size_modify(struct Object *O, int new_max_size){
 }
 
 void add_Point_to_Object(struct Object *O, struct Point *P){
+    quick_check_Object(O);
+    check_point(P);
+
     if(O->max_size == O->size){
         perror("Error: the object is full\n");
         exit(EXIT_FAILURE);
@@ -108,6 +145,8 @@ void add_Point_to_Object(struct Object *O, struct Point *P){
 }
 
 void del_Point_of_Object(struct Object *O, int i){
+    quick_check_Object(O);
+
     if(i >= O->size || i < 0){
         perror("Erro: invalid index\n");
         exit(EXIT_FAILURE);
@@ -123,6 +162,8 @@ void del_Point_of_Object(struct Object *O, int i){
 }
 
 void del_segment_of_Object(struct Object *O, int i, int j){
+    quick_check_Object(O);
+    
     if(i >= O->size || i < 0){
         perror("Erro: invalid index i\n");
         exit(EXIT_FAILURE);
@@ -151,7 +192,7 @@ void del_segment_of_Object(struct Object *O, int i, int j){
 }
 
 void del_Object(struct Object *O){
-    check_arg_pointer(O);
+    quick_check_Object(O);
 
     free(O->vector);
 

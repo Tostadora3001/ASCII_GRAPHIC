@@ -68,15 +68,18 @@ void quick_check_Object(struct Object *O){
         fprintf(2, "Error: Unexpected NULL pointer in O.vector\n");
         exit(EXIT_FAILURE);
     }
-}
 
-void extensive_check_Object(struct Object *O){
-    quick_check_Object(O);
     int b = equal_Point_exact(&O->vector[O->max_size], &SENTINEL_VALUE);
     if(!b){
         fprintf(2, "Error: Sentinel Value for the Object is compromised\n");
         exit(EXIT_FAILURE);
     }
+}
 
-    
+void extensive_check_Object(struct Object *O){
+    quick_check_Object(O);
+
+    for(int i = 0; i < O->size; ++i){
+        check_point(&O->vector[i]);
+    }
 }

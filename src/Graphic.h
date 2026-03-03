@@ -9,7 +9,6 @@
 
 #include "vector3D.h"
 #include "Structs/struct_graphic.h"
-#include "Integrity.h"
 
 //A struct of a point containing the coordinates and the character (color) that will be printed when the point is printed
 struct Point;            //color can not be \n
@@ -60,7 +59,7 @@ struct Object Initialice_void_Object(int max_size);
 
 //PRE  : a max_size and a valid vector of Points with its size is given. Also max_size >= vector.size && max_size > 0
 //POST : the Object is initialiced with the given values.
-struct Object Initialice_load_Object(int max_size, int size, struct Point v[]);
+struct Object Initialice_load_Object(int max_size, int size, struct Point *v);
 
 //PRE  : modify max_size of the Object
 //POST : the max_size is modified and the vector too. Take in account that when reducing the max_size there is a posibility of data loss. max_size > 0
