@@ -2,22 +2,35 @@
 #include <unistd.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <sys/ioctl.h>
+
 
 #include "Graphic.h"
+
+//Utility functions for potencial errors management
+
+void check_arg_pointer(void *pointer){
+    if(pointer == NULL){
+        fprintf(stderr, "Fatal Error: Unexpected NULL pointer in argument.\n");
+        exit(EXIT_FAILURE);
+    }
+}
 
 //Utility functions for Point and Object management
 //-------------------------------------------------------------------------------------------------------------------------//
 
 struct Point set_Point(struct vector3D *vec, char color){
+    check_arg_pointer(vec);
+
     struct Point P;
-    P.coord = vec;
+    P.coord = *vec;
     P.color = color;
 
     return P;
 }
 
 struct Point move_Point_with_vector3D(struct Point *P, struct vector3D *vec){
-    P->coord = vector3D_add(&P->coord, *vec);
+    P->coord = vector3D_add(&P->coord, vec);
     return;
 }
 
@@ -27,7 +40,7 @@ void change_color(struct Point *P, char color){
 
 struct vector3D vector3D_A_B(struct Point *A, struct Point *B){
     struct vector3D diff;
-    diff = vector3D_sub(*A, *B);
+    diff = vector3D_sub(A, B);
 
     return diff;
 }
@@ -39,7 +52,7 @@ struct Object Initialice_Object(int max_size){
     }
 
     struct Object O;
-    O.vector = malloc(max_size);
+    O.vector = malloc(max_size * POINT_STRUCT_SIZE);
     if(O.vector == NULL){
         perror("Error: Initialice_Object malloc\n");
         exit(EXIT_FAILURE);
@@ -56,7 +69,7 @@ void Object_max_size_modify(struct Object *O, int new_max_size){
         exit(EXIT_FAILURE);
     }
 
-    O->vector = realloc(O->vector, new_max_size);
+    O->vector = realloc(O->vector, new_max_size * POINT_STRUCT_SIZE);
     if(O->vector == NULL){
         perror("Error: Initialice_Object malloc\n");
         exit(EXIT_FAILURE);
@@ -74,7 +87,7 @@ void add_Point_to_Object(struct Object *O, struct Point *P){
         exit(EXIT_FAILURE);
     }
     
-    O->vector[O->size - 1] = P;
+    O->vector[O->size - 1] = *P;
 }
 
 void del_Point_of_Object(struct Object *O, int i){
@@ -83,11 +96,11 @@ void del_Point_of_Object(struct Object *O, int i){
         exit(EXIT_FAILURE);
     }
 
-    for(; i < size-1; ++i){
+    for(; i < O->size-1; ++i){
         O->vector[i] = O->vector[i+1];
     }
 
-    --size;
+    --O->size;
 }
 
 void del_segment_of_Object(struct Object *O, int i, int j){
@@ -108,7 +121,7 @@ void del_segment_of_Object(struct Object *O, int i, int j){
 
     if(j == O->size - 1) O->size = i + 1;
     else{
-        for(x = i; (x + (i-j) + 1) < O->size; ++x){
+        for(int x = i; (x + (i-j) + 1) < O->size; ++x){
             O->vector[x] = O->vector[x + (i-j) + 1];
         }
 
@@ -116,7 +129,15 @@ void del_segment_of_Object(struct Object *O, int i, int j){
     }
 }
 
-void del_Object(struct Object *O);
+void del_Object(struct Object *O){
+    check_arg_pointer(O);
+
+    free(O->vector);
+
+    O->size = 0;
+    O->max_size = 0;
+    O->vector = NULL;
+}
 
 
 //-------------------------------------------------------------------------------------------------------------------------//
@@ -166,10 +187,10 @@ void resize_signal_configuration(){
 }
 
 void draw_Linux_terminal(char *mat, int row, int col){
-    printf("\x1b[H")    //Move cursor to top left
+    printf("\x1b[H");    //Move cursor to top left
 
     for(int i = 0; i < row; ++i){
-        if(fwrite(1, mat, sizeof(char)*col) < 0){ 
+        if(write(1, mat, sizeof(char)*col) < 0){ 
             perror("Error: draw_Linux_terminal write(mat)"); 
             exit(EXIT_FAILURE);
         }
