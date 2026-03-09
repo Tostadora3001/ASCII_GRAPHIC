@@ -7,6 +7,8 @@
 //Forward declarations of neede functions 
 int equal_Point_exact(struct Point *A, struct Point *B);
 
+//A sentinel value used to validate the integrity of the Object.vector
+const struct Point SENTINEL_VALUE = { {NAN, NAN, NAN}, '\0' };
 
 //Utility functions for potencial errors management
 

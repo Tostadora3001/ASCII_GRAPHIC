@@ -13,7 +13,6 @@
 //Validates that the given pointer is not a NULL
 void check_arg_pointer(void *pointer);
 
-
 //vector3D validation functions
 //-------------------------------------------------------------------------------------------------------------------------//
 
@@ -27,6 +26,7 @@ void check_matrix3x3(struct matrix3x3 *M);
 //Object validation functions
 //-------------------------------------------------------------------------------------------------------------------------//
 
+extern const struct Point SENTINEL_VALUE;
 //validates that coord of the Point is coherent (check_vector3D) and the color is not \n
 void check_point(struct Point *P);
 

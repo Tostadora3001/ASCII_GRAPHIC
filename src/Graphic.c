@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <unistd.h>
-#include <signal.h>
 #include <stdlib.h>
 #include <sys/ioctl.h>
 #include <math.h>
@@ -8,6 +7,8 @@
 
 #include "Graphic.h"
 #include "Integrity.h"
+#include "vector3D.h"
+#include "Signals_Linux.h"
 
 //Utility functions for Point management
 //-------------------------------------------------------------------------------------------------------------------------//
@@ -232,24 +233,6 @@ int get_terminal_height(){
     return w.ws_row;
 }
 
-
-void handle_resize(int sig){
-    struct winsize w;
-    if(ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) < 0){
-        perror("Error : ioctl syscall error"); 
-        exit(EXIT_FAILURE);
-    }
-    //printf("\nResize detected! New Size: %d x %d\n", w.ws_col, w.ws_row);
-}
-
-void resize_signal_configuration(){
-    if(signal(SIGWINCH, handle_resize) == SIG_ERR){ 
-        perror("Error: resize siganl configuration"); 
-        exit(EXIT_FAILURE);
-    }
-    return 0;
-}
-
 void draw_Linux_terminal(char *mat, int row, int col){
     printf("\x1b[H");    //Move cursor to top left
 
@@ -287,6 +270,8 @@ void show_cursor_Linux_Terminal() {
 //Simulation Code
 //This section contains the algorithms for a good 3D simnulation and projection into the screen
 //-------------------------------------------------------------------------------------------------------------------------//
+
+void render_frame(struct Object *list, int num_Objects);
 
 
 

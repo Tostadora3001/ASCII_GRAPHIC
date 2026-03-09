@@ -7,8 +7,8 @@
 #ifndef GRAPHIC_H
 #define GRAPHIC_H
 
-#include "vector3D.h"
 #include "Structs/struct_graphic.h"
+#include "Data_Structs/Data_Structs.h"
 
 //A struct of a point containing the coordinates and the character (color) that will be printed when the point is printed
 struct Point;            //color can not be \n
@@ -18,10 +18,6 @@ struct Object;
 
 //A struct of a camera. A Camera is a special point, needed for the graphic calculation. It is composed of a point and a direction, both being a vector3D
 struct Camera;
-
-//Utility functions for potencial errors management
-
-void check_arg_pointer(void *pointer);
 
 //Utility functions for Point management
 //-------------------------------------------------------------------------------------------------------------------------//
@@ -99,13 +95,6 @@ int get_terminal_width();
 //POST : returns the current height of the terminal
 int get_terminal_height();
 
-//A handler for a resize event
-void handle_resize(int sig);
-
-//PRE  : -
-//POST : The resize signal is configurated
-void resize_signal_configuration();
-
 //PRE  : a valid char matrix address and its dimensions (integers) are given
 //POST : the given matrix is printed on terminal
 void draw_Linux_terminal(char *mat, int row, int col);
@@ -134,7 +123,7 @@ void show_cursor_Linux_Terminal();
 
 //PRE  : a vector with a pointer to all the objects to render and the number of it
 //POST : the logical values and coordinates are injected into a matrix of chars ready to be printed
-void render_frame();
+void render_frame(struct Object *list, int num_Objects);
  
 
 //-------------------------------------------------------------------------------------------------------------------------//

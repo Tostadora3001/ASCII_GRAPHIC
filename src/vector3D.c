@@ -1,5 +1,6 @@
 #include <math.h>
 #include "vector3D.h"
+#include "Integrity.h"
 
 //Vectors 3D
 //-------------------------------------------------------------------------------------------------------------------------//
@@ -19,10 +20,14 @@ struct vector3D vector3D_parameters_assignation(float a, float b, float c){
     A.y = b;
     A.z = c;
     
+    check_vector3D(&A);
     return A;
 }
 
 struct vector3D vector3D_add(struct vector3D *A, struct vector3D *B){
+    check_vector3D(A);
+    check_vector3D(B);
+    
     struct vector3D C;
     C.x = A->x + B->x;
     C.y = A->y + B->y;
@@ -32,6 +37,9 @@ struct vector3D vector3D_add(struct vector3D *A, struct vector3D *B){
 }
 
 struct vector3D vector3D_sub(struct vector3D *A, struct vector3D *B){
+    check_vector3D(A);
+    check_vector3D(B);
+    
     struct vector3D C;
     C.x = A->x - B->x;
     C.y = A->y - B->y;
@@ -40,8 +48,11 @@ struct vector3D vector3D_sub(struct vector3D *A, struct vector3D *B){
     return C;
 }
 
-int vector3D_equal(struct vector3D *A, struct vector3D *B){
-    int b = 1;
+char vector3D_equal(struct vector3D *A, struct vector3D *B){
+    check_vector3D(A);
+    check_vector3D(B);
+
+    char b = 1;
     if(A->x != B->x) b = 0;
     else if(A->y != B->y) b = 0;
     else if(A->z != B->z) b = 0;
@@ -56,6 +67,8 @@ void vector3D_set0(struct vector3D *A){
 }
 
 struct vector3D vector3D_escalar_multiplication(float s, struct vector3D *A){
+    check_vector3D(A);
+    
     struct vector3D C;
     C.x = A->x * s;
     C.y = A->y * s;
@@ -65,6 +78,8 @@ struct vector3D vector3D_escalar_multiplication(float s, struct vector3D *A){
 }
 
 float vector3D_magnitude(struct vector3D *A){
+    check_vector3D(A);
+
     float x_2 = A->x * A->x;
     float y_2 = A->y * A->y;
     float z_2 = A->z * A->z;
@@ -73,6 +88,8 @@ float vector3D_magnitude(struct vector3D *A){
 }
 
 struct vector3D vector3D_normalize(struct vector3D *A){
+    check_vector3D(A);
+
     struct vector3D C;
     float mag = vector3D_magnitude(A);
 
@@ -88,6 +105,10 @@ struct vector3D vector3D_normalize(struct vector3D *A){
 //-------------------------------------------------------------------------------------------------------------------------//
 
 struct matrix3x3 vector3D_to_matrix3x3(struct vector3D *A, struct vector3D *B, struct vector3D *C){
+    check_vector3D(A);
+    check_vector3D(B);
+    check_vector3D(C);
+    
     struct matrix3x3 D;
     D.matrix[0] = A->x;
     D.matrix[1] = A->y;
@@ -104,7 +125,7 @@ struct matrix3x3 vector3D_to_matrix3x3(struct vector3D *A, struct vector3D *B, s
     return D;
 }
 
-struct matrix3x3 float_to_matrix3x3(float a, float b, float c, float d, float e, float f, float g, float h, float i){
+struct matrix3x3 float_to_matrix3x3(float a, float b, float c, float d, float e, float f, float g, float h, float i){    
     struct matrix3x3 A;
     A.matrix[0] = a;
     A.matrix[1] = b;
@@ -116,6 +137,7 @@ struct matrix3x3 float_to_matrix3x3(float a, float b, float c, float d, float e,
     A.matrix[7] = h;
     A.matrix[8] = i;
 
+    check_matrix3x3(&A);
     return A;
 }
 
@@ -127,10 +149,14 @@ struct matrix3x3 vector_to_matrix3x3(float v[], int a , int b){
         for(int i = a; i <= b; ++i) A.matrix[i-a] = v[i];
     }
 
+    check_matrix3x3(&A);
     return A;
 }
 
 struct matrix3x3 matrix3x3_add(struct matrix3x3 *A, struct matrix3x3 *B){
+    check_matrix3x3(A);
+    check_matrix3x3(B);
+    
     struct matrix3x3 C;
     for(int i = 0; i < 9; ++i){
         C.matrix[i] = A->matrix[i] + B->matrix[i];
@@ -141,6 +167,9 @@ struct matrix3x3 matrix3x3_add(struct matrix3x3 *A, struct matrix3x3 *B){
 
 
 struct matrix3x3 matrix3x3_sub(struct matrix3x3 *A, struct matrix3x3 *B){
+    check_matrix3x3(A);
+    check_matrix3x3(B);
+    
     struct matrix3x3 C;
     for(int i = 0; i < 9; ++i){
         C.matrix[i] = A->matrix[i] - B->matrix[i];
@@ -149,8 +178,11 @@ struct matrix3x3 matrix3x3_sub(struct matrix3x3 *A, struct matrix3x3 *B){
     return C;
 }
 
-int matrix3x3_equal(struct matrix3x3 *A, struct matrix3x3 *B){
-    int b = 1;
+char matrix3x3_equal(struct matrix3x3 *A, struct matrix3x3 *B){
+    check_matrix3x3(A);
+    check_matrix3x3(B);
+    
+    char b = 1;
 
     for(int i = 0; i < 9; ++i){
         if(A->matrix[i] != B->matrix[i]){
@@ -169,6 +201,8 @@ void matrix3x3_set0(struct matrix3x3 *A){
 }
 
 struct matrix3x3 matrix3x3_escalar_mul(float s, struct matrix3x3 *A){
+    check_matrix3x3(A);
+
     struct matrix3x3 C;
     for(int i = 0; i < 9; ++i){
         C.matrix[i] = A->matrix[i] * s;
@@ -178,6 +212,9 @@ struct matrix3x3 matrix3x3_escalar_mul(float s, struct matrix3x3 *A){
 }
 
 struct matrix3x3 matrix3x3_matrix_mul(struct matrix3x3 *A, struct matrix3x3 *B){
+    check_matrix3x3(A);
+    check_matrix3x3(B);
+    
     struct matrix3x3 C;
     for(int i = 0; i < 9; ++i){
         int aux1 = i/3;     //current row

@@ -29,7 +29,7 @@ struct vector3D vector3D_sub(struct vector3D *A, struct vector3D *B);
 
 //PRE   : two valid vector3D address are given
 //POST  : an integer indicating if true or false -> 0 - false ; >0 - true
-int vector3D_equal(struct vector3D *A, struct vector3D *B);
+char vector3D_equal(struct vector3D *A, struct vector3D *B);
 
 //It sets all vector's elements to 0
 //PRE  : a valid 3D vector address is given 
@@ -59,9 +59,7 @@ struct vector3D vector3D_normalize(struct vector3D *A);
 // A Union permits different ways to acces data in the matrix. First as a vector, second as a matrix
 struct matrix3x3;
 
-//Useful matrix3x3
-// If your struct is: struct matrix { float v[9]; };
-
+//The Identity (AxI = A)
 extern const struct matrix3x3 Identity;
 
 //PRE   : three valid vector3D address are given
@@ -89,7 +87,7 @@ struct matrix3x3 matrix3x3_sub(struct matrix3x3 *A, struct matrix3x3 *B);
 
 //PRE   : two valid matrix3x3 address are given
 //POST  : an integer indicating if true or false -> 0 - false ; >0 - true
-int matrix3x3_equal(struct matrix3x3 *A, struct matrix3x3 *B);
+char matrix3x3_equal(struct matrix3x3 *A, struct matrix3x3 *B);
 
 //It sets all matrix's elements to 0
 //PRE  : a valid matrix address is given 
