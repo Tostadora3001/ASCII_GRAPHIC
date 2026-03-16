@@ -3,6 +3,8 @@
 #ifndef DATA_STRUCTS_H
 #define DATA_STRUCTS_H
 
+#include "../Structs/struct_graphic.h"
+
 //Frame_Matrix
 //The Frame_Matrix is the Matrix that will be printed into terminal. It contains each frame
 //-------------------------------------------------------------------------------------------------------------------------//
@@ -24,7 +26,24 @@ void Create_Frame_Matrix();
 //POST : The matrix is resize in order to mainteing it coherent with terminal window size
 void Resize_Frame_Matrix();
 
-
+//Buffer
+//The Buffer is an array of the Objects ready to be rendericed so they can be displayed as an image
 //-------------------------------------------------------------------------------------------------------------------------// 
+
+struct Buffer{
+    int size;
+    int max_size;
+    struct Object *buffer;
+};
+
+volatile struct Buffer Buffer;
+
+//PRE  : The Buffer has not being initialiced before
+//POSt : Using malloc memory from Heap is reserved for Buffer
+void InicialiceBuffer();
+
+//PRE  : a valid Object address is given and the Buffer is inisialiced;
+//POST : the Object is inserted into Buffer . An inserted Object can not be eliminated from the Buffer
+void insertObject_to_Buffer(struct Object *O);
 
 #endif 

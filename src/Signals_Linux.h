@@ -3,6 +3,14 @@
 #ifndef SIGNALS_LINUX_H
 #define SIGNALS_LINUX_H
 
+//Timer
+//A timer used for the FPS calculus
+timer_t timerid;
+
+//delta_t is the real time between frames
+float delta_t;
+
+
 //Handlers
 //-------------------------------------------------------------------------------------------------------------------------//
 
@@ -13,6 +21,9 @@ void handle_resize(int sig);
 //PRE  : Must be configurated by CrtlC_signal_configuration() and a Crtl-C signal must arrive
 //POST
 void handle_CrtlC(int sig);
+
+
+void handle_Frame_Time(struct sigevent *sev);
 
 //Signals configurators 
 //-------------------------------------------------------------------------------------------------------------------------//
@@ -28,5 +39,9 @@ void resize_signal_configuration();
 //PRE  : -
 //POST : The Crtl-C signal is configureted in order to avoid problems from unexpected terminations
 void CrtlC_signal_configuration();
+
+//PRE  : s is a positive number greater than 0
+//POST : A timer is set, calling the function draw_Linux_terminal each s miliseconds
+void Frame_Time_signal_configuration_Linux(int s);
 
 #endif

@@ -233,11 +233,11 @@ int get_terminal_height(){
     return w.ws_row;
 }
 
-void draw_Linux_terminal(char *mat, int row, int col){
+void draw_Linux_terminal(){
     printf("\x1b[H");    //Move cursor to top left
 
-    for(int i = 0; i < row; ++i){
-        if(write(1, mat, sizeof(char)*col) < 0){ 
+    for(int i = 0; i < Frame_Matrix.height; ++i){
+        if(write(1, Frame_Matrix.matrix, sizeof(char)*Frame_Matrix.width) < 0){ 
             perror("Error: draw_Linux_terminal write(mat)"); 
             exit(EXIT_FAILURE);
         }
@@ -271,8 +271,27 @@ void show_cursor_Linux_Terminal() {
 //This section contains the algorithms for a good 3D simnulation and projection into the screen
 //-------------------------------------------------------------------------------------------------------------------------//
 
-void render_frame(struct Object *list, int num_Objects);
+void render_frame(){
+    //Objects Movement
+}
 
+void setFPS_ms(int ms){
+    if(ms <= 0){
+        perror("Error: setFPS_ms frequency too low\n");
+        exit(EXIT_FAILURE);
+    }
 
+    Frame_Time_signal_configuration_Linux(ms);
+}
+
+void setFPS_hz(int hz){
+    int ms = 1000 / hz;
+    if(ms <= 0){
+        perror("Error: setFPS_hz frequency too low\n");
+        exit(EXIT_FAILURE);
+    }
+
+    Frame_Time_signal_configuration_Linux(ms);
+}
 
 //-------------------------------------------------------------------------------------------------------------------------//

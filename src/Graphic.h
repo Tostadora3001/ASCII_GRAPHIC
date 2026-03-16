@@ -17,7 +17,10 @@ struct Point;            //color can not be \n
 struct Object;
 
 //A struct of a camera. A Camera is a special point, needed for the graphic calculation. It is composed of a point and a direction, both being a vector3D
-struct Camera;
+//MainCamera is the Camera used by the functions in order to do the calculus. You can use diversous Cameras but only MainCamera
+//will be calculated
+struct Camera MainCamera;
+
 
 //Utility functions for Point management
 //-------------------------------------------------------------------------------------------------------------------------//
@@ -97,7 +100,7 @@ int get_terminal_height();
 
 //PRE  : a valid char matrix address and its dimensions (integers) are given
 //POST : the given matrix is printed on terminal
-void draw_Linux_terminal(char *mat, int row, int col);
+void draw_Linux_terminal();
 
 //PRE  : -
 //POST : The terminal is cleaned and restaured to normality
@@ -123,7 +126,15 @@ void show_cursor_Linux_Terminal();
 
 //PRE  : a vector with a pointer to all the objects to render and the number of it
 //POST : the logical values and coordinates are injected into a matrix of chars ready to be printed
-void render_frame(struct Object *list, int num_Objects);
+void render_frame();
+
+//PRE  : ms is a positive number grater than 0
+//POST : A frame is printed each ms. CAUTION a too low value can broke the code
+void setFPS_ms(int ms);
+
+//PRE  : hz is a positive number greater than 0
+//POST : The actualization rate of frames is set to hz. For example is hz is 1 each second the frame will be print
+void setFPS_hz(int hz);
  
 
 //-------------------------------------------------------------------------------------------------------------------------//
