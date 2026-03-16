@@ -273,6 +273,7 @@ void show_cursor_Linux_Terminal() {
 
 void render_frame(){
     //Objects Movement
+    
 }
 
 void setFPS_ms(int ms){
